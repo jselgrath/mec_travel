@@ -111,6 +111,38 @@ source("./bin/travel_summarize.R")
 #         ./results/all_access_zipcode_pap_all.csv
 #         ./doc/all_access_zipcode_pap_sum.csv
 
+# graphs of travel time
+source("./bin/travel_graph.R")
+# input:  
+# output:
+
+# summarize travel time/distances for piers and jetties
+source("./bin/travel_summarize_piers.R")
+# input:  ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# output: ./results/piers_zipcode_driving2.csv #cleaned version of file
+#         ./doc/piers_zipcode_state_sum.csv
+#         ./results/piers_zipcode_pap_all.csv
+#         ./doc/piers_zipcode_pap_sum.csv
+
+# graphs of travel time
+source("./bin/travel_graph_piers.R")
+# input:  ./results/piers.csv
+#         ./results/piers_zipcode_driving2.csv
+#         ./doc/piers_zipcode_state_sum.csv
+#         ./results/piers_zipcode_pap_all.csv
+#         ./doc/piers_zipcode_pap_sum.csv
+# output: ./doc/pier_state_time_km.tiff
+#         ./doc/pier_time_km.tiff
+#         ./doc/pier_zip_count_name.tiff
+#         ./doc/pier_zip_count_county.tiff
+#         ./doc/piers_zip_countno_label.tiff
+
 # make honeycomb / hexagon file
 source("./bin/hex_polygon")
 
+#         
+#         
+#         
+#         
+#         
+#         

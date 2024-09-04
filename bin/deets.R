@@ -187,7 +187,7 @@ deets11<-theme_bw() +
         panel.border=element_rect(fill=NA),
         axis.title = element_text(size=rel(1.4),colour="black", lineheight=.8),
         axis.text = element_text(size=rel(1.3), lineheight=.8),
-        axis.text.x = element_text(hjust=1, angle = 45,  colour="white"),
+        axis.text.x = element_text(hjust=1),#, angle = 45,  colour="white"),
         axis.title.y=element_text(vjust=1,lineheight=.8),
         axis.title.x=element_text(vjust=.5), 
         legend.position="none",

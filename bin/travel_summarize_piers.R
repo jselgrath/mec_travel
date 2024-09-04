@@ -6,7 +6,9 @@
 
 # guide to acronyms ----
 # PAP = public access point - same as coastal access point (CAP)
+# PAJ - piers and jetties
 
+# NOTE: pepper point did not calculate any data for time (other sites are ok)
 #======================================================
 library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet)# 
 
@@ -20,7 +22,7 @@ setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
 # All Access ------------------------
 d1<-read_csv("./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv")%>%
   select(XCoord,YCoord,Name,StartTime ,EndTime, Total_TravelTime=Total_Trav,Total_Kilometers=Total_Kilo)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>%
+  separate_wider_delim(Name,names=c("zip_code","pier")," - ")%>%
   mutate(zip_code=as.numeric(zip_code))%>%#separate origion and destination
   mutate(Total_TravelTime=as.numeric(Total_TravelTime),
          StartTime=as_datetime(StartTime),
@@ -28,20 +30,21 @@ d1<-read_csv("./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_dr
   glimpse()
 
 d1$zip_code
+d1$Total_TravelTime
 
-# summariZe for whole state
+# summarize for whole state
 d1a<-d1%>%
   summarize(
     n=n(),
     zip_codes_n=length(unique(zip_code)),
-    pap_n=length(unique(pap)),
+    pier_n=length(unique(pier)),
     
     #time
-    time_min_u=mean(Total_TravelTime),
-    time_min_sd=sd(Total_TravelTime),
+    time_min_u=mean(Total_TravelTime, na.rm=T),
+    time_min_sd=sd(Total_TravelTime, na.rm=T),
     time_min_sem=time_min_sd/sqrt(n),
-    time_min_low=min(Total_TravelTime),
-    time_min_max=max(Total_TravelTime),
+    time_min_low=min(Total_TravelTime, na.rm=T),
+    time_min_max=max(Total_TravelTime, na.rm=T),
     
     #distance
     dist_km_u=mean(Total_Kilometers),
@@ -52,18 +55,19 @@ d1a<-d1%>%
   )%>%
   glimpse()
 
-# summarize by pap   --------------------------
+# summarize by pier   --------------------------
+# pepper point did not calculate any data for time (other sites are ok)
 d1b<-d1%>%
-  group_by(pap)%>%
+  group_by(pier)%>%
   summarize(
     zip_codes_n=length(zip_code),
 
     #time
-    time_min_u=mean(Total_TravelTime),
-    time_min_sd=sd(Total_TravelTime),
+    time_min_u=mean(Total_TravelTime, na.rm=T),
+    time_min_sd=sd(Total_TravelTime, na.rm=T),
     # time_min_sem=time_min_sd/sqrt(n),na.rm=T,
-    time_min_low=min(Total_TravelTime),
-    time_min_max=max(Total_TravelTime),
+    time_min_low=min(Total_TravelTime, na.rm=T),
+    time_min_max=max(Total_TravelTime, na.rm=T),
     
     #distance
     dist_km_u=mean(Total_Kilometers),
@@ -76,33 +80,33 @@ d1b<-d1%>%
   ungroup()%>%
   glimpse()
 
-# summary statistics for all paps ---------------------------
+# summary statistics for all piers ---------------------------
 # here, not using grand means but could for a slightly different question
 d1c<-d1b%>%
   summarize(
-    pap_n=n(),
-    pap_zip_u=mean(zip_codes_n),
-    pap_zip_sd=sd(zip_codes_n),
-    pap_zip_sem=sd(zip_codes_n)/sqrt(pap_n),
-    pap_zip_min=min(zip_codes_n),
-    pap_zip_max=max(zip_codes_n),
-    pap_zip_1_n=length(zip_codes_n[zip_codes_n==1]),
-    pap_zip_1_p=pap_zip_1_n/pap_n,
+    pier_n=n(),
+    pier_zip_u=mean(zip_codes_n, na.rm=T),
+    pier_zip_sd=sd(zip_codes_n, na.rm=T),
+    pier_zip_sem=sd(zip_codes_n)/sqrt(pier_n),
+    pier_zip_min=min(zip_codes_n, na.rm=T),
+    pier_zip_max=max(zip_codes_n, na.rm=T),
+    pier_zip_1_n=length(zip_codes_n[zip_codes_n==1]),
+    pier_zip_1_p=pier_zip_1_n/pier_n,
     
 
     #time
-    time_min_pap_u=mean(time_min_u),
-    time_min_pap_sd=sd(time_min_u),
-    time_min_pap_sem=time_min_pap_sd/sqrt(pap_n),
-    time_min_pap_low=min(time_min_u),
-    time_min_pap_max=max(time_min_u),
+    time_min_pier_u=mean(time_min_u, na.rm=T),
+    time_min_pier_sd=sd(time_min_u, na.rm=T),
+    time_min_pier_sem=time_min_pier_sd/sqrt(pier_n),
+    time_min_pier_low=min(time_min_u, na.rm=T),
+    time_min_pier_max=max(time_min_u, na.rm=T),
     
     #distance
-    dist_km_pap_u=mean(dist_km_u),
-    dist_km_pap_sd=sd(dist_km_u),
-    dist_km_pap_sem=dist_km_pap_sd/sqrt(pap_n),
-    dist_km_pap_low=min(dist_km_u),
-    dist_km_pap_max=max(dist_km_u)
+    dist_km_pier_u=mean(dist_km_u),
+    dist_km_pier_sd=sd(dist_km_u),
+    dist_km_pier_sem=dist_km_pier_sd/sqrt(pier_n),
+    dist_km_pier_low=min(dist_km_u),
+    dist_km_pier_max=max(dist_km_u)
   )%>%
   glimpse()
 
