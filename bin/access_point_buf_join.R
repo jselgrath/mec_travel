@@ -17,6 +17,15 @@ setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel")
 
 # access points -------------------
 
+# non-buffered ferries
+d0<-(st_read("./gis/public_access_points_CA2/access_ca2.gpkg", layer = "ferries"))%>%
+  glimpse()
+
+d00<-d0%>%
+  select(id_pap=id_ferry)%>%
+  glimpse()
+
+
 # checks layers in the gpkg
 st_layers("./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg")
 
@@ -107,6 +116,7 @@ d01a<-d31%>%
   select(-id_pap.x,-id_pap.y,-OBJECTID_1)%>%
   glimpse()
 d01a
+plot(d01a)
 
 #mpa, 500
 d04a<-d31%>%
@@ -258,6 +268,37 @@ glimpse(d26a)
 d26a
 
 
+
+# join ferries to mpas and nms ---------------------------------
+glimpse(d00)
+
+# join mpa access points and ferries
+d100<-d01a%>% # mpa 
+  select(id_pap)%>%
+  rbind(d00)%>% #access points with all 5 ferries
+  glimpse()
+
+plot(d100)
+view(d100)
+
+# d100%>%filter(mpa_250m!=1)
+
+# join nms access points and ferries (no chnms) -------------
+
+# select ferries to NMS only
+d000<-d00%>%
+  filter(id_pap=="ferry_3" |id_pap=="ferry_4"  )%>%
+  glimpse()
+
+d101<-d11a%>% # mpa 
+  select(id_pap)%>%
+  rbind(d000)%>% #access points with all 5 ferries
+  glimpse()
+
+plot(d101)
+view(d101)
+
+
 # save all in one geopackage as layers---------------------------------
 # note:I should check this output
 
@@ -301,3 +342,7 @@ st_write(d25,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_500m.gpkg
 
 st_write(d26,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_500m.gpkg","ch_jetties_500m_pt",delete_layer=T)
 
+
+
+# mpas and nms with ferries
+st_write(d100,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_ferry.gpkg","mpa_access_250m_buf_ferries",delete_layer=T)
