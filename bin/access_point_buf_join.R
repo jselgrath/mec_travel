@@ -254,6 +254,7 @@ d23a<-d33%>%
   mutate(id_paj =id_paj.x,)%>%
   select(-id_paj.x,-id_paj.y)%>%
   glimpse()
+plot(d23a)
 
 #ch, 500
 d26a<-d33%>%
@@ -279,7 +280,7 @@ d100<-d01a%>% # mpa
   glimpse()
 
 plot(d100)
-view(d100)
+# view(d100)
 
 # d100%>%filter(mpa_250m!=1)
 
@@ -290,15 +291,22 @@ d000<-d00%>%
   filter(id_pap=="ferry_3" |id_pap=="ferry_4"  )%>%
   glimpse()
 
-d101<-d11a%>% # mpa 
+d101<-d11a%>% # nms 
   select(id_pap)%>%
-  rbind(d000)%>% #access points with all 5 ferries
+  rbind(d000)%>% #access points with 2 ferries
   glimpse()
 
 plot(d101)
-view(d101)
+# view(d101)
 
+# select ferries to NMS only - CHNMS Final boundary 20240906
+d102<-d21a%>% # nms & chnms final boundary 
+  select(id_pap)%>%
+  rbind(d000)%>% #access points with 2 ferries
+  glimpse()
 
+plot(d102)
+# view(d102)
 # save all in one geopackage as layers---------------------------------
 # note:I should check this output
 
@@ -346,3 +354,7 @@ st_write(d26,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_500m.gpkg
 
 # mpas and nms with ferries
 st_write(d100,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_ferry.gpkg","mpa_access_250m_buf_ferries",delete_layer=T)
+
+st_write(d101,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_ferry.gpkg","nms_access_250m_buf_ferries",delete_layer=T)
+
+st_write(d102,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms_ferry.gpkg","nms_ch_access_250m_buf_ferries",delete_layer=T)

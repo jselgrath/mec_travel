@@ -49,10 +49,12 @@ source("./bin/mpa_ids.R")
 # ./gis/NMS_west_coast/National_Marine_Sanctuaries_WestCoast.shp  ## Sanctuaries: 
 # ./gis/Chumash_proposed_shapefile/Chumash_proposed_shapefile.shp ## PROPOSED Chumash boundaries: 
 # ./gis/ChumashHeritage_AgencySelectAlt_12012022/Chumash_AgencySelectAlternative_12012022.shp  ## CHUMASH Agency Alternative: 
+# ./gis/nms_chnms_final.shp  ## CHUMASH FINAL
+
 # 
 # output:
 # ./gis/mpa_nms_all/mpa_nms_all.gpkg   ## ALL output in this geopackage
-#   ## Layers: mpa_ca, nms_ca, chnms_1 (chumash proposed only), chnms_alt (chumash agency alt only), nms_chnms_1 (all CA NMS with chumash proposed), nms_chnms_alt (all CA NMS with chumash agency alt)
+#   ## Layers: mpa_ca, nms_ca, chnms_1 (chumash proposed only), chnms_alt (chumash agency alt only), nms_chnms_1 (all CA NMS with chumash proposed), nms_chnms_alt (all CA NMS with chumash agency alt), chnms_final (final proposed boundary as of Sept 6, 2024), nms_chnms_final (with final proposed boundary)
 # 
 # 
 # 
@@ -71,7 +73,7 @@ source("./bin/access_buf.R")
 # note: ferry access not included because not within buffer
 # note: running nms alone and nms with the bounary alt for chnms 
 # NOTE: very slow!
-source("./bin/mpa_access_buf_interesect_chnms.R")
+source("./bin/mpa_access_buf_intersect_chnms.R")
 # input: 
 # ./gis/public_access_points_CA2_buf/access_ca_buf.gpkg 
       # all buffered access layers in the geopackage
@@ -92,16 +94,24 @@ source("./bin/access_point_buf_join")
 # input:
 # ./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg  # access/ferry buffers
 # ./gis/public_access_points_CA2/access_ca2.gpkg              # access/ferry points
-#  
 # 
 # output:
 # ./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_250m.gpkg
 # ./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_500m.gpkg
 # 
+
+
+# USING OUTPUT FROM ARCPRO MODELS -------------------
+
 # split Zip-MPA code from ArcPro calculation into two columns
 source("./bin/mpa_zip_driving_split_Name.R")
 # input:  ./gis/mpa_zip_driving/mpa_zipcode_driving.gpkg
 # output: ./gis/mpa_zip_driving/mpa_zipcode_driving2.gpkg
+
+
+# -------------------------------------------------
+# SUMMARIZE TRAVEL TIME AND DISTANCE 
+#-------------------------------------------------
 
 # summarize travel time/distances for state and public access points (paps)
 source("./bin/travel_summarize.R")
@@ -111,10 +121,25 @@ source("./bin/travel_summarize.R")
 #         ./results/all_access_zipcode_pap_all.csv
 #         ./doc/all_access_zipcode_pap_sum.csv
 
-# graphs of travel time
-source("./bin/travel_graph.R")
-# input:  
-# output:
+
+
+# summarize travel time/distances for mpas
+source("./bin/travel_summarize_nms.R")
+# input:  ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# output: ./results/mpas_zipcode_driving2.csv #cleaned version of file
+#         ./doc/mpas_zipcode_state_sum.csv
+#         ./results/mpas_zipcode_pap_all.csv
+#         ./doc/mpas_zipcode_pap_sum.csv
+
+# summarize travel time/distances for sanctuaries
+source("./bin/travel_summarize_mpas.R")
+# input:  ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# output: ./results/nms_zipcode_driving2.csv #cleaned version of file
+#         ./doc/nms_zipcode_state_sum.csv
+#         ./results/nms_zipcode_pap_all.csv
+#         ./doc/nms_zipcode_pap_sum.csv
+
+
 
 # summarize travel time/distances for piers and jetties
 source("./bin/travel_summarize_piers.R")
@@ -123,6 +148,19 @@ source("./bin/travel_summarize_piers.R")
 #         ./doc/piers_zipcode_state_sum.csv
 #         ./results/piers_zipcode_pap_all.csv
 #         ./doc/piers_zipcode_pap_sum.csv
+
+
+# join all summary stats
+source("./bin/travel_summarize_join.R")  # in process
+# input:  
+# output:
+
+
+# graphs of travel time
+source("./bin/travel_graph.R")
+# input:  
+# output:
+
 
 # graphs of travel time
 source("./bin/travel_graph_piers.R")
@@ -140,6 +178,9 @@ source("./bin/travel_graph_piers.R")
 # make honeycomb / hexagon file
 source("./bin/hex_polygon")
 
+
+# exlpore cal enviroscreen data
+source("./bin/calenviroscreen.R")
 #         
 #         
 #         

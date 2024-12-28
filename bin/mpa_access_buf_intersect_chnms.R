@@ -66,9 +66,15 @@ plot(d8)
 
 # chnms agency prefered alternative 
 # https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/chumash/2023-chnms-boundary-alternative-maps.pdf
-d9<-st_read("./gis/mpa_nms_all/mpa_nms_all.gpkg", layer = "nms_chnms_alt")%>%
-  glimpse()
+# d9<-st_read("./gis/mpa_nms_all/mpa_nms_all.gpkg", layer = "nms_chnms_alt")%>%
+#   glimpse()
 
+# chnms final alternative 
+# https://sanctuaries.noaa.gov/chumash-heritage/ 
+# file from Mike Murray (see email)
+d9<-st_read("./gis/mpa_nms_all/mpa_nms_all.gpkg", layer = "nms_chnms_final")%>%
+    glimpse()
+  
 plot(d9)
 
 
@@ -285,3 +291,4 @@ st_write(d4_c,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg","ch_a
 st_write(d5_c,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg","ch_parking_500m_buf",delete_layer=T)
 
 st_write(d6_c,"./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg","ch_jetties_500m_buf",delete_layer=T)
+

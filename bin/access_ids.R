@@ -35,6 +35,13 @@ d1a<-d1%>%
   as_tibble()%>%
   glimpse()
 
+d1b<-d1a%>%
+  summarize(
+    n_access_points=length(unique(id_pap))
+  )%>%
+  mutate(type="All")%>%
+  glimpse()
+
 # amentities -------------------
 d2<-(st_read("./gis/public_access_points_CA_csuci/gpkg/California Coastal Access Amenities and Parking WFL1 - Beach Amenities.gpkg"))%>% 
   mutate(id_pam=paste0("pam_",row_number()))%>%
@@ -62,6 +69,15 @@ d3%>%glimpse()%>% plot()
 d3a<-d3%>%
   as_tibble()%>%
   glimpse()
+
+d3b<-d3a%>%
+  summarize(
+    n_access_points=length(unique(id_ppk))
+  )%>%
+  mutate(type="Parking")%>%
+  glimpse()
+
+
 
 # counties --------------------------
 d4<-(st_read("./gis/public_access_points_CA_csuci/gpkg/California Coastal Access Amenities and Parking WFL1 - Coastal Counties.gpkg"))
@@ -100,6 +116,14 @@ d6a<-d6%>%
   as_tibble()%>%
   glimpse()
 
+d6b<-d6a%>%
+  summarize(
+    n_access_points=length(unique(id_paj))
+  )%>%
+  mutate(type="Piers")%>%
+  glimpse()
+
+
 # ferries - already has ID
 d7<-(st_read("./gis/ferry_access/ferry_access.shp"))%>% 
   select(id_ferry,access_name=Name,access_location=location,access_type=AccessType,price_adult_day_trip_min=price_adul)%>%
@@ -112,7 +136,24 @@ d7a<-d7%>%
   as_tibble()%>%
   glimpse()
 
+d7b<-d7a%>%
+  summarize(
+    n_access_points=length(unique(id_ferry))
+  )%>%
+  mutate(type="Ferry")%>%
+  glimpse()
+
+# combine summaries --------------------------
+d8<-rbind(d1b,d3b,d6b,d7b) %>% 
+  select(type,n_access_points)%>%
+  mutate(percent=round(n_access_points/3684,3))%>% # note this really only make sense for the parking lot stat
+  glimpse()
+
+
+
 # SAVE ---------------------------------------------------
+write_csv(d8,"./doc/access_point_numbers.csv")
+
 # save in separate gpkg files
 st_write(d1,"./gis/public_access_points_CA2/access_ca.gpkg","access",delete_layer=T)
 st_write(d2,"./gis/public_access_points_CA2/amenities_ca.gpkg","amenities_ca", delete_layer=T)

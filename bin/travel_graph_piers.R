@@ -34,6 +34,8 @@ d1c<-read_csv("./doc/piers_zipcode_pap_sum.csv")%>%  glimpse()
 m1<-lm(Total_TravelTime~Total_Kilometers,data=d1)
 m1
 anova(m1)
+summary (m1)
+
 
 
 

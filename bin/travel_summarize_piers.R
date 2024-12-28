@@ -37,7 +37,7 @@ d1a<-d1%>%
   summarize(
     n=n(),
     zip_codes_n=length(unique(zip_code)),
-    pier_n=length(unique(pier)),
+    access_point_n=length(unique(pier)),
     
     #time
     time_min_u=mean(Total_TravelTime, na.rm=T),
@@ -54,6 +54,9 @@ d1a<-d1%>%
     dist_km_max=max(Total_Kilometers)
   )%>%
   glimpse()
+
+d1a$type<-"pier"
+d1a
 
 # summarize by pier   --------------------------
 # pepper point did not calculate any data for time (other sites are ok)
@@ -80,35 +83,42 @@ d1b<-d1%>%
   ungroup()%>%
   glimpse()
 
+d1b$type<-"pier"
+d1b
+
 # summary statistics for all piers ---------------------------
 # here, not using grand means but could for a slightly different question
 d1c<-d1b%>%
   summarize(
-    pier_n=n(),
-    pier_zip_u=mean(zip_codes_n, na.rm=T),
-    pier_zip_sd=sd(zip_codes_n, na.rm=T),
-    pier_zip_sem=sd(zip_codes_n)/sqrt(pier_n),
-    pier_zip_min=min(zip_codes_n, na.rm=T),
-    pier_zip_max=max(zip_codes_n, na.rm=T),
-    pier_zip_1_n=length(zip_codes_n[zip_codes_n==1]),
-    pier_zip_1_p=pier_zip_1_n/pier_n,
+    access_point_n=n(),
+    zip_codes_n2=sum(zip_codes_n),
+    pap_zip_u=mean(zip_codes_n, na.rm=T),
+    pap_zip_sd=sd(zip_codes_n, na.rm=T),
+    pap_zip_sem=sd(zip_codes_n)/sqrt(access_point_n),
+    pap_zip_min=min(zip_codes_n, na.rm=T),
+    pap_zip_max=max(zip_codes_n, na.rm=T),
+    pap_zip_1_n=length(zip_codes_n[zip_codes_n==1]),
+    pap_zip_1_p=pap_zip_1_n/access_point_n,
     
 
     #time
-    time_min_pier_u=mean(time_min_u, na.rm=T),
-    time_min_pier_sd=sd(time_min_u, na.rm=T),
-    time_min_pier_sem=time_min_pier_sd/sqrt(pier_n),
-    time_min_pier_low=min(time_min_u, na.rm=T),
-    time_min_pier_max=max(time_min_u, na.rm=T),
+    time_min_pap_u=mean(time_min_u, na.rm=T),
+    time_min_pap_sd=sd(time_min_u, na.rm=T),
+    time_min_pap_sem=time_min_pap_sd/sqrt(access_point_n),
+    time_min_pap_low=min(time_min_u, na.rm=T),
+    time_min_pap_max=max(time_min_u, na.rm=T),
     
     #distance
-    dist_km_pier_u=mean(dist_km_u),
-    dist_km_pier_sd=sd(dist_km_u),
-    dist_km_pier_sem=dist_km_pier_sd/sqrt(pier_n),
-    dist_km_pier_low=min(dist_km_u),
-    dist_km_pier_max=max(dist_km_u)
+    dist_km_pap_u=mean(dist_km_u),
+    dist_km_pap_sd=sd(dist_km_u),
+    dist_km_pap_sem=dist_km_pap_sd/sqrt(access_point_n),
+    dist_km_pap_low=min(dist_km_u),
+    dist_km_pap_max=max(dist_km_u)
   )%>%
   glimpse()
+
+d1c$type<-"pier"
+d1c
 
 # save -------------------
 write_csv(d1,"./results/piers_zipcode_driving2.csv") #cleaned version of file
