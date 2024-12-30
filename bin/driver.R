@@ -115,31 +115,27 @@ source("./bin/mpa_zip_driving_split_Name.R")
 
 # summarize travel time/distances for state and public access points (paps)
 source("./bin/travel_summarize.R")
-# input:  ./data/network_analyses_20240503/zipcode/all_access_zipcode_driving.txt
+# input:  ./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg
 # output: ./results/all_access_zipcode_driving2.csv #cleaned version of file
 #         ./doc/all_access_zipcode_state_sum.csv
 #         ./results/all_access_zipcode_pap_all.csv
 #         ./doc/all_access_zipcode_pap_sum.csv
 
-
-
 # summarize travel time/distances for mpas
-source("./bin/travel_summarize_nms.R")
-# input:  ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
-# output: ./results/mpas_zipcode_driving2.csv #cleaned version of file
-#         ./doc/mpas_zipcode_state_sum.csv
-#         ./results/mpas_zipcode_pap_all.csv
-#         ./doc/mpas_zipcode_pap_sum.csv
-
-# summarize travel time/distances for sanctuaries
 source("./bin/travel_summarize_mpas.R")
-# input:  ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# input:  ./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp
 # output: ./results/nms_zipcode_driving2.csv #cleaned version of file
 #         ./doc/nms_zipcode_state_sum.csv
 #         ./results/nms_zipcode_pap_all.csv
 #         ./doc/nms_zipcode_pap_sum.csv
 
-
+# summarize travel time/distances for nms
+source("./bin/travel_summarize_nms.R")
+# input:  ./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp
+# output: ./results/mpas_zipcode_driving2.csv #cleaned version of file
+#         ./doc/mpas_zipcode_state_sum.csv
+#         ./results/mpas_zipcode_pap_all.csv
+#         ./doc/mpas_zipcode_pap_sum.csv
 
 # summarize travel time/distances for piers and jetties
 source("./bin/travel_summarize_piers.R")
@@ -152,8 +148,26 @@ source("./bin/travel_summarize_piers.R")
 
 # join all summary stats
 source("./bin/travel_summarize_join.R")  # in process
-# input:  
-# output:
+# input:     ./doc/all_access_zipcode_state_sum.csv
+#            ./doc/all_access_zipcode_pap_sum.csv
+#            ./doc/mpa_zipcode_state_sum.csv
+#            ./doc/mpa_zipcode_pap_sum.csv
+#            ./doc/nms_zipcode_state_sum.csv
+#            ./doc/nms_zipcode_pap_sum.csv
+#            ./doc/piers_zipcode_state_sum.csv
+#            ./doc/piers_zipcode_pap_sum.csv
+# output:    ./doc/summaries_state.csv
+#            ./doc/summaries_access_point.csv
+
+
+# Calcuate time: distance relationhip for Table 1
+source("./bin/travel_stats_time_dist.R")
+# input:    ./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg
+#           ./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp
+#           ./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp
+#           ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# output: none
+
 
 
 # graphs of travel time
@@ -174,6 +188,11 @@ source("./bin/travel_graph_piers.R")
 #         ./doc/pier_zip_count_name.tiff
 #         ./doc/pier_zip_count_county.tiff
 #         ./doc/piers_zip_countno_label.tiff
+
+
+
+
+
 
 # make honeycomb / hexagon file
 source("./bin/hex_polygon")

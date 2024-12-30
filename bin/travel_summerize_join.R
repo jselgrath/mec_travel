@@ -31,6 +31,7 @@ d8<-read_csv("./doc/piers_zipcode_pap_sum.csv")%>%glimpse()
 d11<-rbind(d1,d3,d5,d7) %>% 
   select(type,n:dist_km_max)%>%
   glimpse()
+d11
 
 # join all pap summaries ---------------
 d12<-rbind(d2,d4,d6,d8) %>% 

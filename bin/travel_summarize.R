@@ -22,6 +22,7 @@ setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
 d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg")%>%
   select(Name,StartTime ,EndTime, Total_TravelTime,Total_Kilometers)%>%
   separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origion and destination
+  arrange(zip_code)%>%
   glimpse()
 
 # summariZe for whole state
