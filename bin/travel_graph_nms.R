@@ -20,7 +20,7 @@ source("./bin/deets.R")
 # All Access ------------------------
 d0<-read_csv("./results/public_access_points.csv")%>%
   mutate(pap=id_pap)%>%
-  # select(pap,access_name,access_county)%>%
+  select(pap,access_name,access_county)%>%
   glimpse()
 d1<-read_csv("./results/all_access_zipcode_driving2.csv")%>%  glimpse() #cleaned version of file
 d1a<-read_csv("./results/all_access_zipcode_state_sum.csv")%>%  glimpse()
@@ -45,7 +45,7 @@ ggplot(d1,aes(Total_Kilometers,Total_TravelTime))+geom_point()+
   ylab("Travel Time (minutes)")+
   geom_smooth(method=lm, se=TRUE,alpha=0.5) + #.95 CI by default
   deets9
-ggsave("./doc/state_time_km_pap.tiff",width=8,height=4)
+ggsave("./doc/state_time_km.tiff",width=8,height=4)
 
 # time given distance - pap
 ggplot(d1b,aes(dist_km_u,time_min_u))+geom_point()+
@@ -55,7 +55,7 @@ ggplot(d1b,aes(dist_km_u,time_min_u))+geom_point()+
   geom_text_repel(data=subset(d1b, time_min_u>60&time_min_u<150&dist_km_u<100),
                   aes(x=dist_km_u,y=time_min_u,label=access_name),max.overlaps=15)+
   deets9
-ggsave("./doc/time_km_pap.tiff",width=8,height=4)
+ggsave("./doc/pap_time_km.tiff",width=8,height=4)
 
 # label by pap
 ggplot(d1b,aes(zip_codes_n))+geom_bar()+
@@ -64,7 +64,7 @@ ggplot(d1b,aes(zip_codes_n))+geom_bar()+
   xlab("Number of Zip Codes Closest to One Access Point")+
   ylab("Number of Access Points")+
   deets9
-ggsave("./doc/zip_count_name_pap.tiff",width=8,height=4)
+ggsave("./doc/pap_zip_count_name.tiff",width=8,height=4)
 
 # label by county
 ggplot(d1b,aes(zip_codes_n))+geom_bar()+
@@ -73,7 +73,7 @@ ggplot(d1b,aes(zip_codes_n))+geom_bar()+
   xlab("Number of Zip Codes Closest to One Access Point")+
   ylab("Number of Access Points")+
   deets9
-ggsave("./doc/zip_count_county_pap.tiff",width=8,height=4)
+ggsave("./doc/pap_zip_count_county.tiff",width=8,height=4)
 
 # no label 
 ggplot(d1b,aes(zip_codes_n))+geom_bar(width = 2.5)+
@@ -82,4 +82,4 @@ ggplot(d1b,aes(zip_codes_n))+geom_bar(width = 2.5)+
   xlab("Number of Zip Codes Served by the Access Point")+
   ylab("Number of Access Points")+
   deets11
-ggsave("./doc/zip_countno_label_pap.tiff",width=8,height=4)
+ggsave("./doc/pap_zip_countno_label.tiff",width=8,height=4)

@@ -51,7 +51,7 @@ ggplot(d1,aes(Total_Kilometers,Total_TravelTime))+geom_point()+
   ylim(-1,400)+
   geom_smooth(se=TRUE,alpha=0.8) + #.95 CI by default method=lm, 
   deets11
-ggsave("./doc/pier_state_time_km.png",width=8,height=4)
+ggsave("./doc/state_time_km_pier.png",width=8,height=4)
 
 # time given distance - pap
 ggplot(d1b,aes(dist_km_u,time_min_u))+geom_point()+
@@ -61,7 +61,7 @@ ggplot(d1b,aes(dist_km_u,time_min_u))+geom_point()+
   geom_text_repel(data=subset(d1b, time_min_u>100&dist_km_u>100),
                   aes(x=dist_km_u,y=time_min_u,label=pier),max.overlaps=15)+
   deets11
-ggsave("./doc/pier_time_km.png",width=8,height=4)
+ggsave("./doc/time_km_pier.png",width=8,height=4)
 
 # label by pap
 ggplot(d1b,aes(zip_codes_n))+geom_bar()+
