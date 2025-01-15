@@ -14,16 +14,22 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 # ZIP CODES ##### ----------------------
+d1<-read_csv("./results/network_analysis_all_access_FINAL.csv")
+d2<-read_csv("./results/network_analysis_mpa_FINAL.csv")
+d3<-read_csv("./results/network_analysis_nms_almost_FINAL.csv") #update this when Lucas Fixes this file
+d4<-read_csv("./results/network_analysis_piers_jetties_FINAL.csv") # does not have id codes (d4d does, but missing some)
+
 
 # All Access ------------------------
 # d1<-read_csv("./data/network_analyses_20240503/zipcode/all_access_zipcode_driving.txt")%>%
-d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg")%>%
-  select(Name,StartTime ,EndTime, Total_TravelTime,Total_Kilometers)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origion and destination
-  arrange(zip_code)%>%
-  glimpse()
+# d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg")%>%
+#   select(Name,StartTime ,EndTime, Total_TravelTime,Total_Kilometers)%>%
+#   separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origion and destination
+#   arrange(zip_code)%>%
+#   glimpse()
 
 # summariZe for whole state
 d1a<-d1%>%

@@ -15,29 +15,37 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
 
+# list of correct zip codes (not PO boxes, not military bases, etc)
+d0<-read_csv("./results/California_Zip_Codes_matched.csv")%>%
+  select(zip_code)%>%
+  glimpse()
 
 
 # ALL ACCESS ------------------------
-# d1<-read_csv("./data/network_analyses_20240503/zipcode/all_access_zipcode_driving.txt")%>%
-d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg")%>%
-  select(Name,StartTime ,EndTime, Total_TravelTime,Total_Kilometers)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origion and destination
-  arrange(zip_code)%>%
-  glimpse()
+# correct list, still missing some info for mpa and nms
+d1<-read_csv("./results/network_analysis_all_access_FINAL.csv")
+d2<-read_csv("./results/network_analysis_mpa_FINAL.csv")
+d3<-read_csv("./results/network_analysis_nms_almost_FINAL.csv") #update this when Lucas Fixes this file
+d4<-read_csv("./results/network_analysis_piers_jetties_FINAL.csv") # does not have id codes (d4d does, but missing some)
 
+
+# All ACCESS ---------------------------
+# graph etc
 plot(d1$Total_TravelTime~d1$Total_Kilometers)
+
+# percent of CAP that are efficent access points
+length(unique(d1$pap))
+length(unique(d1$pap))/ 3684*100
+
 
 m1<-lm(Total_TravelTime~Total_Kilometers,d1)
 m1
 summary(m1)
 
-# MPAs -------------------------------------------
-d2<-st_read("./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp")%>%
-  select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
-  arrange(zip_code)%>%
-  glimpse()
 
+
+
+# MPAs -------------------------------------------
 plot(d2$Total_TravelTime~d2$Total_Kilometers)
 
 m2<-lm(Total_TravelTime~Total_Kilometers,d2)
@@ -46,12 +54,6 @@ summary(m2)
 
 
 # nms ----------------------
-d3<-st_read("./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp")%>%
-  select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
-  arrange(zip_code)%>%
-  glimpse()
-
 plot(d3$Total_TravelTime~d3$Total_Kilometers)
 
 m3<-lm(Total_TravelTime~Total_Kilometers,d3)
@@ -59,18 +61,30 @@ m3
 summary(m3)
 
 
-# piers and jetties
-d4<-read_csv("./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv")%>%  #note: this analysis not updated in sept 2024 because no change in access points
-  select(XCoord,YCoord,Name,StartTime ,EndTime, Total_TravelTime=Total_Trav,Total_Kilometers=Total_Kilo)%>%
-  separate_wider_delim(Name,names=c("zip_code","pier")," - ")%>%
-  mutate(zip_code=as.numeric(zip_code))%>%#separate origion and destination
-  mutate(Total_TravelTime=as.numeric(Total_TravelTime),
-         StartTime=as_datetime(StartTime),
-         EndTime=as_datetime(EndTime))%>%
+# piers and jetties --------------------------------------
+d4b<-st_read("./gis/public_access_points_CA2/piers_jetties_ca.gpkg")%>% glimpse()
+
+
+# includes PAJ that are not the closest
+d4c<-d4%>%
+  full_join(d4b)%>%
   glimpse()
+
+# only closest PAJ
+# note that a handful of PAJ do not have IDs
+d4d<-d4%>%
+  left_join(d4b)%>%
+  glimpse()
+
 
 plot(d4$Total_TravelTime~d4$Total_Kilometers)
 
 m4<-lm(Total_TravelTime~Total_Kilometers,d4)
 m4
 summary(m4)
+
+
+# save ---------------------------------
+
+
+

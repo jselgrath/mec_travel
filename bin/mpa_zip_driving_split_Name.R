@@ -18,8 +18,8 @@ setwd("C:/Users/jennifer.selgrath/Documents/gis/mec_access/ZipCodes")
 # zip code polygons
 d0<-st_read("./California_Zip_Codes.shp")%>%
   glimpse() 
+plot(d0)
   
-
   
 # new wd 
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel") 
@@ -88,3 +88,4 @@ mapa <- leaflet(data = d3) %>%
             title = "Travel to MPAs [Mi2]",
             opacity = 1
   )
+mapa

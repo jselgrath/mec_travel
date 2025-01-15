@@ -7,12 +7,14 @@
 # PAP = public access point - same as coastal access point (CAP)
 
 #======================================================
-library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet);library(ggrepel);  
+library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet);library(ggrepel); library(colorspace) 
 
 
 #======================================================
 remove(list=ls())
-setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+
+setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 source("./bin/deets.R")
 
 # ZIP CODES ##### ----------------------
@@ -23,11 +25,11 @@ d0<-read_csv("./results/public_access_points.csv")%>%
   # select(pap,access_name,access_county)%>%
   glimpse()
 d1<-read_csv("./results/all_access_zipcode_driving2.csv")%>%  glimpse() #cleaned version of file
-d1a<-read_csv("./results/all_access_zipcode_state_sum.csv")%>%  glimpse()
+d1a<-read_csv("./doc/all_access_zipcode_state_sum.csv")%>%  glimpse()
 d1b<-read_csv("./results/all_access_zipcode_pap_all.csv")%>%  
   left_join(d0)%>%
   glimpse()
-d1c<-read_csv("./results/all_access_zipcode_pap_sum.csv")%>%  glimpse()
+d1c<-read_csv("./doc/all_access_zipcode_pap_sum.csv")%>%  glimpse()
 
 # model -------------------
 m1<-lm(Total_TravelTime~Total_Kilometers,data=d1)
@@ -76,10 +78,19 @@ ggplot(d1b,aes(zip_codes_n))+geom_bar()+
 ggsave("./doc/zip_count_county_pap.tiff",width=8,height=4)
 
 # no label 
-ggplot(d1b,aes(zip_codes_n))+geom_bar(width = 2.5)+
-  # geom_bar(data=subset(d1b, zip_codes_n<=100),aes(zip_codes_n))+
-  geom_bar(data=subset(d1b, zip_codes_n>=100),aes(zip_codes_n,fill="#D41159"),width = 2.5)+
+
+# add grouping for color
+d1c<-d1b%>%
+  mutate(clr=as.factor(if_else(zip_codes_n>=50&zip_codes_n<100,1,
+                       if_else(zip_codes_n>=100,2,0))))%>%
+  glimpse()
+
+# colors
+cols<- c("LightGray","#D41159","#5F1415")
+
+ggplot(d1c,aes(zip_codes_n, color=clr))+geom_bar(width = 1)+
   xlab("Number of Zip Codes Served by the Access Point")+
   ylab("Number of Access Points")+
+  scale_color_manual(values=cols)+
   deets11
 ggsave("./doc/zip_countno_label_pap.tiff",width=8,height=4)

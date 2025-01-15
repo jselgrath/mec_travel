@@ -15,18 +15,21 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
-# ZIP CODES ##### ----------------------
 
-# All Access ------------------------
-d1<-read_csv("./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv")%>%  #note: this analysis not updated in sept 2024 because no change in access points
-  select(XCoord,YCoord,Name,StartTime ,EndTime, Total_TravelTime=Total_Trav,Total_Kilometers=Total_Kilo)%>%
-  separate_wider_delim(Name,names=c("zip_code","pier")," - ")%>%
-  mutate(zip_code=as.numeric(zip_code))%>%#separate origion and destination
-  mutate(Total_TravelTime=as.numeric(Total_TravelTime),
-         StartTime=as_datetime(StartTime),
-         EndTime=as_datetime(EndTime))%>%
+# Piers ---------------------------
+d1<-read_csv("./results/network_analysis_piers_jetties_FINAL.csv") %>%
   glimpse()
+
+# d1<-read_csv("./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv")%>%  #note: this analysis not updated in sept 2024 because no change in access points
+#   select(XCoord,YCoord,Name,StartTime ,EndTime, Total_TravelTime=Total_Trav,Total_Kilometers=Total_Kilo)%>%
+#   separate_wider_delim(Name,names=c("zip_code","pier")," - ")%>%
+#   mutate(zip_code=as.numeric(zip_code))%>%#separate origion and destination
+#   mutate(Total_TravelTime=as.numeric(Total_TravelTime),
+#          StartTime=as_datetime(StartTime),
+#          EndTime=as_datetime(EndTime))%>%
+#   glimpse()
 
 d1$zip_code
 d1$Total_TravelTime

@@ -5,7 +5,7 @@
 
 # guide to acronyms ----
 # MPA = state MPA network (CA)
-# updated 20240905 to final prefered alternative boundary for CHNMS
+# updated 20240905 to final boundary for CHNMS
 #======================================================
 library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate)# 
 library(sp); 
@@ -13,7 +13,7 @@ library(sp);
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel")
-
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 # access points -------------------
 
@@ -30,7 +30,7 @@ length(unique(d1$CCR_Int)) #147
 length(unique(d1$NAME)) #155
 
 
-
+filter(d1, NAME=="Lover's Cove SMCA")
 
 
 # load sanctuaries -------------
@@ -46,7 +46,7 @@ plot(d2[,2])
 
 
 
-# load proposed sanctuary ----------------------
+# load chumash sanctuary ----------------------
 
 # original files moved to different sub folder
 
@@ -100,16 +100,16 @@ plot(d8)
 # save -----------------
 #all in one geopackage as layers
 st_write(d1,"./gis/mpa_nms_all/mpa_nms_all.gpkg","mpa_ca",delete_layer=T)
-st_write(d2,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_ca", delete_layer=T)
+# st_write(d2,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_ca", delete_layer=T)
 # st_write(d3,"./gis/mpa_nms_all/mpa_nms_all.gpkg","chnms_1", delete_layer=T)
 # st_write(d4,"./gis/mpa_nms_all/mpa_nms_all.gpkg","chnms_alt", delete_layer=T)
-st_write(d44,"./gis/mpa_nms_all/mpa_nms_all.gpkg","chnms_final", delete_layer=T)
+st_write(d44,"./gis/mpa_nms_all/mpa_nms_all.gpkg","chumash_final", delete_layer=T)
 
 
 # old boundaries
 # st_write(d6,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_chnms_1", delete_layer=T) # NMS plus chumash proposed boundary
 # st_write(d7,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_chnms_alt", delete_layer=T) # NMS plus agency alternative boundary
 
-st_write(d8,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_chnms_final", delete_layer=T) # NMS plus chumash proposed boundary
+st_write(d8,"./gis/mpa_nms_all/mpa_nms_all.gpkg","nms_ca_2024", delete_layer=T) # NMS plus chumash proposed boundary
 
 plot(d8)

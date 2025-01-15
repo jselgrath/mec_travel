@@ -13,20 +13,19 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 # ZIP CODES ##### ----------------------
-
-# All Access ------------------------
-
+d1<-read_csv("./results/network_analysis_nms_almost_FINAL.csv")
 #this hex data has lots of duplicates. removing GRID_ID and geometry
 
 # hexagon_values_FINAL/hexagon_mpa
 # d0<-st_read("./gis/hexagon_values_FINAL/hexagon_nms/hexagon_nms_ch_zipcode_join.shp")%>%
-d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp")%>%
-  select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
-  arrange(zip_code)%>%
-  glimpse()
+# d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp")%>%
+#   select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
+#   separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
+#   arrange(zip_code)%>%
+#   glimpse()
 
 # summariZe for whole state
 d1a<-d1%>%

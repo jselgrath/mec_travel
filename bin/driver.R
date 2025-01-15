@@ -16,6 +16,7 @@ library(sp);
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 
 # calculate IDs for access points (cleaned by CSUCI) & from piers and jetties (not cleaned) ---------------------
@@ -42,7 +43,7 @@ source("./bin/access_ids.R")
 
 # asign unique IDs to MPA and NMS files -----------------------------
 
-# using CHNMS inital boundary alternative - now prefererd alternative
+# using CHNMS final boundary
 source("./bin/mpa_ids.R")
 # input:
 # ./gis/California_Marine_Protected_Areas_[ds582]/California_Marine_Protected_Areas_[ds582].shp  ## State MPAs: 
@@ -54,10 +55,16 @@ source("./bin/mpa_ids.R")
 # 
 # output:
 # ./gis/mpa_nms_all/mpa_nms_all.gpkg   ## ALL output in this geopackage
-#   ## Layers: mpa_ca, nms_ca, chnms_1 (chumash proposed only), chnms_alt (chumash agency alt only), nms_chnms_1 (all CA NMS with chumash proposed), nms_chnms_alt (all CA NMS with chumash agency alt), chnms_final (final proposed boundary as of Sept 6, 2024), nms_chnms_final (with final proposed boundary)
+#   ## Layers: mpa_ca, nms_ca_2024, chnms_final (final proposed boundary as of Sept 6, 2024)
 # 
 # 
 # 
+
+# update ferry dataset to match others
+# note was not buffered
+source("./bin/ferries.R")
+# input::  ./gis/public_access_points_CA2/access_ca2.gpkg", layer = "ferries"
+# output: ./gis/public_access_points_CA2_buf/access_buf_mpa_nms.gpkg","ferries2"
 
 # buffer access points 250m and 500m -------------------------------------
 
@@ -70,10 +77,10 @@ source("./bin/access_buf.R")
 
 # intersect  buffered access points (which are polygons) and MPAs/NMS files
 #this uses agency alt boundary for CHNMS in _ch files
-# note: ferry access not included because not within buffer
+# note: ferry access NOT INLCUDED HERE (see next code chunk) 
 # note: running nms alone and nms with the bounary alt for chnms 
 # NOTE: very slow!
-source("./bin/mpa_access_buf_intersect_chnms.R")
+source("./bin/access_buf_mpa_intersect_chnms.R")
 # input: 
 # ./gis/public_access_points_CA2_buf/access_ca_buf.gpkg 
       # all buffered access layers in the geopackage
@@ -96,9 +103,12 @@ source("./bin/access_point_buf_join")
 # ./gis/public_access_points_CA2/access_ca2.gpkg              # access/ferry points
 # 
 # output:
-# ./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_250m.gpkg
-# ./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_500m.gpkg
-# 
+# ./gis/public_access_points_CA2_buf/access_buf_mpa_nms_pt_250m.gpkg/....
+    # mpa_access_250m_pt   # and ... 500  # and .... nms
+    # mpa_parking_250m_pt  # and ... 500  # and .... nms
+    # mpa_jetties_250m_pt  # and ... 500  # and .... nms
+    # mpa_access_250m_buf_ferries  
+    # nms_access_250m_buf_ferries
 
 
 # USING OUTPUT FROM ARCPRO MODELS -------------------
@@ -109,9 +119,57 @@ source("./bin/mpa_zip_driving_split_Name.R")
 # output: ./gis/mpa_zip_driving/mpa_zipcode_driving2.gpkg
 
 
+
+
 # -------------------------------------------------
 # SUMMARIZE TRAVEL TIME AND DISTANCE 
 #-------------------------------------------------
+# checking unmatched zip codes
+source("zip_code_checking_unmatched.R")
+# input:  ./data/network_analyses_20240503/zipcode/all_access_zipcode_driving.txt
+#         ./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg
+#         ./data/California_Zip_Codes/california_zip_codes/California_Zip_Codes.gpkg
+# output: ./data/California_Zip_Codes/california_zip_codes/California_Zip_Codes_matched.shp
+#         ./data/California_Zip_Codes/california_zip_codes/California_Zip_Codes_unmatched_all.csv
+
+# Calcuate time: distance relationhip for Table 1
+# Also check errors in  zip codes with MPA and NMS runs
+source("./bin/travel_clean_id_missing.R")
+# input:    ./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg
+#           ./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp
+#           ./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp
+#           ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
+# output: ./results/network_analysis_mpa_nms_missing.csv
+#           ./results/network_analysis_all_access_FINAL.csv
+#           ./results/network_analysis_mpa_some_missing.csv
+#           ./results/network_analysis_nms_some_missing.csv
+#           ./results/network_analysis_piers_jetties_FINAL.csv # does not have id codes (d4d does, but missing some)
+
+
+# in the last code, some sip codes were missing from MPA and NMS analyses. this makes a file to ID them. 
+source("./bin/missing_from_final_analysis.R")
+# input:    ./results/network_analysis_mpa_nms_missing.csv
+#           ./data/California_Zip_Codes/california_zip_codes/california_zip_codes.gpkg",layer="California_Zip_Codes"
+# output:   ./gis/California_Zip_Codes_missing.shp
+
+
+# merge missing IDs with data from older run
+source("./bin/missing_from_final_analysis_merge_with_data.R")
+# input:  ./results/California_Zip_Codes_matched.csv
+#         ./gis/California_Zip_Codes_missing_edited.shp
+#         ./data/network_analyses_20240503/zipcode/all_access_zipcode_driving.txt
+#         ./data/network_analyses_20240503/zipcode/ferry_zipcode_driving.txt
+#         ./data/network_analyses_20240503/zipcode/mpa_zipcode_driving.txt
+#         ./data/network_analyses_20240503/zipcode/nms_zipcode_driving.txt
+#           ./results/network_analysis_mpa_some_missing.csv
+#           ./results/network_analysis_nms_some_missing.csv
+# output:   ./results/network_analysis_mpa_FINAL.csv
+#         ./results/network_analysis_mpa_almost_FINAL.csv  # some ferries go to catalina island express so need to reclac those.
+
+# summarize final data
+source("./bin/travel_stats_time_dist.R")
+
+
 
 # summarize travel time/distances for state and public access points (paps)
 source("./bin/travel_summarize.R")
@@ -160,17 +218,21 @@ source("./bin/travel_summarize_join.R")  # in process
 #            ./doc/summaries_access_point.csv
 
 
-# Calcuate time: distance relationhip for Table 1
-source("./bin/travel_stats_time_dist.R")
-# input:    ./data/network_analysis_20240909_FINAL/zipcode/all_access/all_access_zipcode_driving.gpkg
-#           ./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp
-#           ./data/network_analysis_20240909_FINAL/zipcode/nms_ferry_new_ch/shapefile/main_nms_ch_ferry_zipcode_driving.shp
-#           ./data/network_analyses_20240503/zipcode/piers_jetties_zip_code_driving_routes_attribute_table.csv
-# output: none
+
 
 
 
 # graphs of travel time
+source("./bin/travel_graph.R")
+# input:  
+# output:
+
+# graphs of travel time to MPAs
+source("./bin/travel_graph.R")
+# input:  
+# output:
+
+# graphs of travel time to NMS
 source("./bin/travel_graph.R")
 # input:  
 # output:

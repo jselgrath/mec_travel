@@ -14,6 +14,7 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 d1<-read_csv("./doc/all_access_zipcode_state_sum.csv")%>%glimpse()
 d2<-read_csv("./doc/all_access_zipcode_pap_sum.csv")%>%glimpse()

@@ -13,7 +13,7 @@ library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubri
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel")
-
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 # access points -------------------
 

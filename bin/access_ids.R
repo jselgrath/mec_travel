@@ -16,6 +16,7 @@ library(sp);
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 
 # access points -------------------
@@ -177,3 +178,4 @@ write_csv(d1a,"./results/public_access_points.csv")
 write_csv(d6a,"./results/ammenities.csv")
 write_csv(d6a,"./results/parking.csv")
 write_csv(d6a,"./results/piers.csv")
+

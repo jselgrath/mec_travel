@@ -7,13 +7,15 @@
 # PAP = public access point - same as coastal access point (CAP)
 # PAJ - piers and jetties
 #======================================================
-library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet);library(ggrepel);  
+library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet);library(ggrepel); library(colorspace) 
 
 
 #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 source("./bin/deets.R")
+
 
 # ZIP CODES ##### ----------------------
 
@@ -41,6 +43,9 @@ summary (m1)
 
 # graph -----------------------------------
 source("./bin/deets.R")
+
+# colors
+cols<- c("LightGray","#fc8d59","#d7301f") # or "#F5D3E7"  "#F79CD4"
 
 # time given distance - state
 # add line and CI
@@ -87,11 +92,21 @@ ggplot(d1b,aes(zip_codes_n))+geom_bar()+
   deets11
 ggsave("./doc/pier_zip_count_county.png",width=8,height=4)
 
+
 # no label 
-ggplot(d1b,aes(zip_codes_n))+geom_bar(width = 2)+
+
+# add grouping for color
+d1c<-d1b%>%
+  mutate(clr=as.factor(if_else(zip_codes_n>=50&zip_codes_n<100,1,
+                               if_else(zip_codes_n>=100,2,0))))%>%
+  glimpse()
+
+
+ggplot(d1c,aes(zip_codes_n, fill=clr))+geom_bar(width = 1)+
   # geom_bar(data=subset(d1b, zip_codes_n<=100),aes(zip_codes_n))+
-  geom_bar(data=subset(d1b, zip_codes_n>=100),aes(zip_codes_n,fill="#D41159"),width = 2.5)+
+  # geom_bar(data=subset(d1b, zip_codes_n>=100),aes(zip_codes_n,fill="#d7301f"),width = 2.5)+
   xlab("Number of Zip Codes Served by one Pier/Jetty")+
   ylab("Count")+
+  scale_fill_manual(values=cols)+
   deets11
 ggsave("./doc/piers_zip_countno_label.png",width=8,height=4)

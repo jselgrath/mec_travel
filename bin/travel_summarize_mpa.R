@@ -7,24 +7,25 @@
 # PAP = public access point - same as coastal access point (CAP)
 
 #======================================================
-library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet)# 
-
-
-#======================================================
+# library(tidyverse); library(dplyr); library(sf); library(ggplot2); library(lubridate); library (leaflet)# 
+# 
+# 
+# #======================================================
 remove(list=ls())
 setwd("C:/Users/jennifer.selgrath/Documents/research/R_projects/mec_travel/")
+# setwd("C:/Users/jselg/OneDrive/Documents/research/R_projects/mec_travel")
 
 # ZIP CODES ##### ----------------------
 
 # All Access ------------------------
 # hexagon_values_FINAL/hexagon_mpa
-
+d1<-read_csv("./results/network_analysis_mpa_FINAL.csv")%>%glimpse()
 # d1<-st_read("./gis/hexagon_values_FINAL/hexagon_mpa/geopackage_mpa_f_zipcode.gpkg")%>%
-d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp")%>%
-  select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
-  separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
-  arrange(zip_code)%>%
-  glimpse()
+# d1<-st_read("./data/network_analysis_20240909_FINAL/zipcode/mpa_ferry/shapefile/main_zipcode_mpa_f_driving.shp")%>%
+#   select(Name,StartTimeUTC=StartTimeU, EndTimeUTC, Total_TravelTime=Total_Trav, Total_Kilometers=Total_Kilo)%>%#FacilityID,Total_TravelTime,Total_Kilometers,Shape)%>%
+#   separate_wider_delim(Name,names=c("zip_code","pap")," - ")%>% #separate origin and destination
+#   arrange(zip_code)%>%
+#   glimpse()
 
 # summariZe for whole state
 d1a<-d1%>%
