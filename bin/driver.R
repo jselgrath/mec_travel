@@ -228,12 +228,12 @@ source("./bin/travel_graph.R")
 # output:
 
 # graphs of travel time to MPAs
-source("./bin/travel_graph.R")
+source("./bin/travel_graph_mpa.R")
 # input:  
 # output:
 
 # graphs of travel time to NMS
-source("./bin/travel_graph.R")
+source("./bin/travel_graph_nms.R")
 # input:  
 # output:
 

@@ -29,7 +29,7 @@ d0<-st_read("./gis/public_access_points_CA2_buf/access_buf_mpa_nms_ferry.gpkg", 
 d1<-read_csv("./results/mpa_zipcode_driving2.csv")%>%  glimpse() #cleaned version of file
 d1a<-read_csv("./doc/mpa_zipcode_state_sum.csv")%>%  glimpse()
 d1b<-read_csv("./results/mpa_zipcode_pap_all.csv")%>%  
-  # left_join(d0)%>%
+  left_join(d0)%>%
   glimpse()
 d1c<-read_csv("./doc/mpa_zipcode_pap_sum.csv")%>%  glimpse()
 
@@ -71,7 +71,7 @@ ggplot(d1b,aes(dist_km_u,time_min_u))+geom_point()+
   deets9
 ggsave("./doc/time_km_mpa.tiff",width=8,height=4)
 
-# label by pap
+# label by mpa
 ggplot(d1c,aes(zip_codes_n, fill=clr))+geom_bar(width = 1)+
   geom_text_repel(data=subset(d1c, clr==2),
                   aes(x=zip_codes_n,y=2,label=mpa_name),max.overlaps=15)+
